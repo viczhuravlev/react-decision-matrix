@@ -1,11 +1,11 @@
 {
-  "vendors.js": "/static/js/vendors.34963140.js",
-  "vendors.js.map": "/static/js/vendors.9c8cfa5e0fba968b6a52.js.map",
-  "app.js": "/static/js/app.9c8cfa5e0fba968b6a52.js",
-  "app.js.map": "/static/js/app.9c8cfa5e0fba968b6a52.js.map",
-  "src-example-button.js": "/static/js/src-example-button.b8920b68.js",
-  "src-example-button.js.map": "/static/js/src-example-button.9c8cfa5e0fba968b6a52.js.map",
-  "src-index.js": "/static/js/src-index.476ef0d5.js",
-  "src-index.js.map": "/static/js/src-index.9c8cfa5e0fba968b6a52.js.map",
-  "index.html": "/index.html"
+  "vendors.js": "/react-decision-matrix/static/js/vendors.7fb48b65.js",
+  "vendors.js.map": "/react-decision-matrix/static/js/vendors.47e87a0d45d801c71438.js.map",
+  "app.js": "/react-decision-matrix/static/js/app.47e87a0d45d801c71438.js",
+  "app.js.map": "/react-decision-matrix/static/js/app.47e87a0d45d801c71438.js.map",
+  "src-example-button.js": "/react-decision-matrix/static/js/src-example-button.b8920b68.js",
+  "src-example-button.js.map": "/react-decision-matrix/static/js/src-example-button.47e87a0d45d801c71438.js.map",
+  "src-index.js": "/react-decision-matrix/static/js/src-index.476ef0d5.js",
+  "src-index.js.map": "/react-decision-matrix/static/js/src-index.47e87a0d45d801c71438.js.map",
+  "index.html": "/react-decision-matrix/index.html"
 }
