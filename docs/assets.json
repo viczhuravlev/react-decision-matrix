@@ -1,11 +1,11 @@
 {
-  "vendors.js": "/react-decision-matrix/static/js/vendors.435b6148.js",
-  "vendors.js.map": "/react-decision-matrix/static/js/vendors.48341bc36e45e6afe906.js.map",
-  "app.js": "/react-decision-matrix/static/js/app.48341bc36e45e6afe906.js",
-  "app.js.map": "/react-decision-matrix/static/js/app.48341bc36e45e6afe906.js.map",
-  "src-button-button.js": "/react-decision-matrix/static/js/src-button-button.ea725e44.js",
-  "src-button-button.js.map": "/react-decision-matrix/static/js/src-button-button.48341bc36e45e6afe906.js.map",
+  "vendors.js": "/react-decision-matrix/static/js/vendors.dd506f20.js",
+  "vendors.js.map": "/react-decision-matrix/static/js/vendors.5bc5ba1364b34aa57151.js.map",
+  "app.js": "/react-decision-matrix/static/js/app.5bc5ba1364b34aa57151.js",
+  "app.js.map": "/react-decision-matrix/static/js/app.5bc5ba1364b34aa57151.js.map",
+  "src-button-button.js": "/react-decision-matrix/static/js/src-button-button.9592cad6.js",
+  "src-button-button.js.map": "/react-decision-matrix/static/js/src-button-button.5bc5ba1364b34aa57151.js.map",
   "src-index.js": "/react-decision-matrix/static/js/src-index.476ef0d5.js",
-  "src-index.js.map": "/react-decision-matrix/static/js/src-index.48341bc36e45e6afe906.js.map",
+  "src-index.js.map": "/react-decision-matrix/static/js/src-index.5bc5ba1364b34aa57151.js.map",
   "index.html": "/react-decision-matrix/index.html"
 }

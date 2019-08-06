@@ -8,7 +8,9 @@ export default {
   dest: '/docs',
   base: isProduction ? '/react-decision-matrix/' : '/',
   typescript: true,
-  codeSandbox: false,
+  codeSandbox: true,
+  notUseSpecifiers: true,
+  // filterComponents: files => files.filter(file => /([^d]\.tsx?)$/.test(file)),
   port: 8888,
   themeConfig: {
     colors: {
