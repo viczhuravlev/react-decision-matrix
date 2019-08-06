@@ -2,6 +2,7 @@
   "compilerOptions": {
     /* Basic Options */
     "incremental": true,
+    "tsBuildInfoFile": "./buildcache/typescript",
     "target": "ES2018",
     "module": "commonjs",
     "jsx": "react",
