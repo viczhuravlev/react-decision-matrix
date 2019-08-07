@@ -1,0 +1,5 @@
+node_modules/*
+buildcache/*
+.docz/*
+docs/*
+lib/*

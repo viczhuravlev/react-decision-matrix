@@ -51,8 +51,8 @@ function getScale({ scale = 'normal' }: T.ButtonProps) {
   return scales[scale];
 }
 
-function getKind({ kind = 'primary', outline = false }: T.ButtonProps) {
-  return kinds(outline)[kind];
+function getKind({ kind: kindType = 'primary', outline = false }: T.ButtonProps) {
+  return kinds(outline)[kindType];
 }
 
 export const Button = styled('button')<T.ButtonProps>`
