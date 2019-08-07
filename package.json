@@ -50,6 +50,8 @@
     "eslint-plugin-react": "7.14.3",
     "eslint-plugin-react-hooks": "1.6.1",
     "eslint-plugin-typescript": "0.14.0",
+    "husky": "3.0.2",
+    "lint-staged": "9.2.1",
     "prettier": "1.18.2",
     "stylelint": "10.1.0",
     "stylelint-config-standard": "18.3.0",
@@ -59,5 +61,23 @@
     "webpack": "4.39.1",
     "webpack-cli": "3.3.6",
     "webpack-node-externals": "1.7.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint:types:check && lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "git add",
+      "eslint",
+      "stylelint",
+      "type-coverage --at-least 100"
+    ],
+    "*.mdx": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
