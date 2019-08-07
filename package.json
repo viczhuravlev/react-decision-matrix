@@ -13,6 +13,9 @@
     "build:source": "npm run build:source:lib && npm run build:source:types",
     "build:source:lib": "webpack --mode production",
     "build:source:types": "tsc --emitDeclarationOnly",
+    "lint:types": "npm run lint:types:check && npm run lint:types:coverage",
+    "lint:types:check": "tsc --noEmit",
+    "lint:types:coverage": "type-coverage --detail --at-least 100",
     "dev:docs": "docz dev",
     "prettier": "prettier --write 'src/**/*.{ts,tsx,mdx}'"
   },
@@ -35,6 +38,7 @@
     "docz": "1.2.0",
     "docz-theme-default": "1.2.0",
     "prettier": "1.18.2",
+    "type-coverage": "2.2.0",
     "webpack": "4.39.1",
     "webpack-cli": "3.3.6",
     "webpack-node-externals": "1.7.2"
