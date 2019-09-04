@@ -4,9 +4,13 @@ import * as T from './Button.types';
 import * as S from './Button.styles';
 
 function Button(props: T.ButtonProps) {
-  const { children, ...other } = props;
+  const { children, kind, outline, scale } = props;
 
-  return <S.Button {...other}>{children}</S.Button>;
+  return (
+    <S.Button kind={kind} outline={outline} scale={scale}>
+      {children}
+    </S.Button>
+  );
 }
 
 Button.defaultProps = {
