@@ -51,7 +51,10 @@ function getScale({ scale = 'normal' }: T.ButtonProps) {
   return scales[scale];
 }
 
-function getKind({ kind: kindType = 'primary', outline = false }: T.ButtonProps) {
+function getKind({
+  kind: kindType = 'primary',
+  outline = false
+}: T.ButtonProps) {
   return kinds(outline)[kindType];
 }
 
