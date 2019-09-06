@@ -4,12 +4,115 @@ import * as T from './DecisionMatrix.types';
 import * as S from './DecisionMatrix.styles';
 
 function DecisionMatrix(props: T.DecisionMatrixProps) {
-  const { children } = props;
+  const { criteria, options } = props;
 
-  return <S.DecisionMatrix>{children}</S.DecisionMatrix>;
+  if (!Array.isArray(criteria) || criteria.length === 0) return null;
+  if (!Array.isArray(options) || options.length === 0) return null;
+
+  return (
+    <S.DecisionMatrix>
+      <S.Table>
+        <S.Thead>
+          <tr>
+            <S.TD>{String.fromCharCode(160)}</S.TD>
+            <S.TD>{String.fromCharCode(160)}</S.TD>
+            <S.TH colSpan={options.length * 2}>Options</S.TH>
+          </tr>
+          <tr>
+            <S.TH>Критерии</S.TH>
+            <S.TH>Вес</S.TH>
+            {options.map(option => (
+              <S.TH key={option.name} colSpan={2}>
+                {option.name}
+              </S.TH>
+            ))}
+          </tr>
+          <tr>
+            <S.TD>{String.fromCharCode(160)}</S.TD>
+            <S.TD>{String.fromCharCode(160)}</S.TD>
+            {options.map(_ => (
+              <>
+                <S.TD>Оценка</S.TD>
+                <S.TD>Вывод</S.TD>
+              </>
+            ))}
+          </tr>
+        </S.Thead>
+        <tfoot>
+          <tr>
+            <S.TD>{String.fromCharCode(160)}</S.TD>
+            <S.TD>Total</S.TD>
+            <S.TD>_</S.TD>
+            <S.TD>55</S.TD>
+            <S.TD>_</S.TD>
+            <S.TD>66</S.TD>
+          </tr>
+        </tfoot>
+        <S.Tbody>
+          {criteria.map((item, index) => {
+            const { values } = options[index];
+
+            if (!Array.isArray(values) || values.length === 0) {
+              return null;
+            }
+
+            const { name, weighting } = item;
+
+            return (
+              <tr key={name + weighting}>
+                <S.TH>{name}</S.TH>
+                <S.TH>{weighting}</S.TH>
+                {values.map(value => {
+                  const total = value * weighting;
+
+                  return (
+                    <>
+                      <S.TD>{value}</S.TD>
+                      <S.TD>{total}</S.TD>
+                    </>
+                  );
+                })}
+              </tr>
+            );
+          })}
+          <tr>
+            <S.TD>{String.fromCharCode(160)}</S.TD>
+            <S.TD>{String.fromCharCode(160)}</S.TD>
+            {options.map(_ => (
+              <>
+                <S.TD>{String.fromCharCode(160)}</S.TD>
+                <S.TD>{String.fromCharCode(160)}</S.TD>
+              </>
+            ))}
+          </tr>
+        </S.Tbody>
+      </S.Table>
+    </S.DecisionMatrix>
+  );
 }
 
-DecisionMatrix.defaultProps = {};
+DecisionMatrix.defaultProps = {
+  criteria: [
+    {
+      name: 'Цена',
+      weighting: 5
+    },
+    {
+      name: 'ДМС',
+      weighting: 3
+    }
+  ],
+  options: [
+    {
+      name: 'Первая опция',
+      values: [1, 2]
+    },
+    {
+      name: 'Вторая опция',
+      values: [4, 5]
+    }
+  ]
+};
 
 DecisionMatrix.displayName = 'DecisionMatrix';
 

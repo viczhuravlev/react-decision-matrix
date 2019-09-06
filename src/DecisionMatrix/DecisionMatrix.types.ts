@@ -1,7 +1,14 @@
-import { ReactNode } from 'react';
+interface Criteria {
+  name: string;
+  weighting: number;
+}
+
+interface Option {
+  name: string;
+  values: number[];
+}
 
 export interface DecisionMatrixProps {
-  children: ReactNode;
-  scale?: 'small' | 'normal' | 'big';
-  test?: string;
+  criteria: Criteria[];
+  options: Option[];
 }
