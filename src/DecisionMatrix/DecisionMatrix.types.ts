@@ -1,9 +1,19 @@
-interface Criteria {
+export interface THProps {
+  isCursor?: boolean;
+}
+
+export interface TDProps {
+  isCursor?: boolean;
+  isMin?: boolean;
+  isMax?: boolean;
+}
+
+export interface Criteria {
   name: string;
   weighting: number;
 }
 
-interface Option {
+export interface Option {
   name: string;
   values: number[];
 }

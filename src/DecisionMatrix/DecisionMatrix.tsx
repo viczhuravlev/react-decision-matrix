@@ -1,92 +1,318 @@
-import React from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 
 import * as T from './DecisionMatrix.types';
 import * as S from './DecisionMatrix.styles';
 
-function DecisionMatrix(props: T.DecisionMatrixProps) {
-  const { criteria, options } = props;
+function TDEmpty() {
+  return <S.TD>{String.fromCharCode(160)}</S.TD>;
+}
 
-  if (!Array.isArray(criteria) || criteria.length === 0) return null;
-  if (!Array.isArray(options) || options.length === 0) return null;
+function DecisionMatrix(props: T.DecisionMatrixProps) {
+  const { criteria: defaultCriteria, options: defaultOptions } = props;
+
+  if (!Array.isArray(defaultCriteria) || defaultCriteria.length === 0) {
+    return null;
+  }
+  if (!Array.isArray(defaultOptions) || defaultOptions.length === 0) {
+    return null;
+  }
+
+  const [criteria, setCriteria] = useState(defaultCriteria);
+  const [options, setOptions] = useState(defaultOptions);
+
+  const [isShow, setShow] = useState(false);
+
+  const [clicked, setClicked] = useState<{
+    optionIndex: number | null;
+    criteriaIndex: number | null;
+    criteriaType: 'name' | 'weighting' | 'score' | null;
+  }>({
+    criteriaIndex: null,
+    optionIndex: null,
+    criteriaType: null
+  });
+
+  useEffect(() => {}, [criteria, options]);
+
+  const totals: number[] = new Array(options.length).fill(0);
+
+  const TRForBody = criteria.map((item, criteriaIndex) => {
+    const { name, weighting } = item;
+
+    return (
+      <S.TR key={criteriaIndex + 1}>
+        <S.TD
+          isCursor
+          onDoubleClick={() => {
+            setClicked({ ...clicked, criteriaIndex, criteriaType: 'name' });
+          }}
+        >
+          {clicked.criteriaIndex === criteriaIndex &&
+          clicked.criteriaType === 'name' ? (
+            <S.Input
+              defaultValue={name}
+              autoFocus
+              onBlur={event => {
+                if (event.target.value) {
+                  criteria[criteriaIndex].name = event.target.value;
+                } else {
+                  setCriteria(
+                    criteriaIndex > 0
+                      ? [
+                          ...criteria.slice(0, criteriaIndex),
+                          ...criteria.slice(criteriaIndex + 1, criteria.length)
+                        ]
+                      : [...criteria.slice(1, criteria.length)]
+                  );
+                }
+                setClicked({
+                  ...clicked,
+                  criteriaIndex: null,
+                  criteriaType: null
+                });
+              }}
+            />
+          ) : (
+            name
+          )}
+        </S.TD>
+        <S.TD
+          isCursor
+          onDoubleClick={() => {
+            setClicked({
+              ...clicked,
+              criteriaIndex,
+              criteriaType: 'weighting'
+            });
+          }}
+        >
+          {clicked.criteriaIndex === criteriaIndex &&
+          clicked.criteriaType === 'weighting' ? (
+            <S.Input
+              defaultValue={String(weighting)}
+              autoFocus
+              onBlur={event => {
+                // todo: real-time update
+                criteria[criteriaIndex].weighting = Number(event.target.value);
+                setClicked({
+                  ...clicked,
+                  criteriaIndex: null,
+                  criteriaType: null
+                });
+              }}
+            />
+          ) : (
+            weighting
+          )}
+        </S.TD>
+        {options.map((option, optionIndex) => {
+          const value = option.values[criteriaIndex] || 0;
+
+          const total = value * weighting;
+
+          totals[optionIndex] += total;
+
+          return (
+            <Fragment key={`${criteriaIndex}_${optionIndex}`}>
+              <S.TD
+                isCursor
+                key={optionIndex}
+                onDoubleClick={() => {
+                  setClicked({
+                    optionIndex,
+                    criteriaIndex,
+                    criteriaType: 'score'
+                  });
+                }}
+              >
+                {clicked.optionIndex === optionIndex &&
+                clicked.criteriaIndex === criteriaIndex &&
+                clicked.criteriaType === 'score' ? (
+                  <S.Input
+                    defaultValue={String(value)}
+                    autoFocus
+                    onBlur={event => {
+                      // todo: real-time update
+                      // eslint-disable-next-line no-param-reassign
+                      option.values[criteriaIndex] = Number(event.target.value);
+                      setClicked({
+                        optionIndex: null,
+                        criteriaIndex: null,
+                        criteriaType: null
+                      });
+                    }}
+                  />
+                ) : (
+                  value
+                )}
+              </S.TD>
+              <S.TD>{total}</S.TD>
+            </Fragment>
+          );
+        })}
+        <TDEmpty />
+        <TDEmpty />
+      </S.TR>
+    );
+  });
+
+  const min = Math.min(...totals);
+  const max = Math.max(...totals);
+  const isCoincidesMinAndMax = min === max;
 
   return (
     <S.DecisionMatrix>
       <S.Table>
         <S.Thead>
-          <tr>
-            <S.TD>{String.fromCharCode(160)}</S.TD>
-            <S.TD>{String.fromCharCode(160)}</S.TD>
-            <S.TH colSpan={options.length * 2}>Options</S.TH>
-          </tr>
-          <tr>
-            <S.TH>Критерии</S.TH>
-            <S.TH>Вес</S.TH>
-            {options.map(option => (
-              <S.TH key={option.name} colSpan={2}>
-                {option.name}
+          <S.TR>
+            <TDEmpty />
+            <TDEmpty />
+            <S.TH colSpan={options.length * 2 + 2}>OPTIONS</S.TH>
+          </S.TR>
+          <S.TR>
+            <S.TH>Criteria</S.TH>
+            <S.TH>Weighting</S.TH>
+            {options.map((option, optionIndex) => (
+              <S.TH
+                isCursor
+                key={option.name}
+                colSpan={2}
+                onDoubleClick={() => setClicked({ ...clicked, optionIndex })}
+              >
+                {clicked.optionIndex === optionIndex &&
+                !clicked.criteriaType ? (
+                  <S.Input
+                    defaultValue={option.name}
+                    autoFocus
+                    onBlur={event => {
+                      if (event.target.value.length) {
+                        options[optionIndex].name = event.target.value;
+                      } else {
+                        setOptions(
+                          optionIndex > 0
+                            ? [
+                                ...options.slice(0, optionIndex),
+                                ...options.slice(
+                                  optionIndex + 1,
+                                  options.length
+                                )
+                              ]
+                            : [...options.slice(1, options.length)]
+                        );
+                      }
+                      setClicked({
+                        ...clicked,
+                        optionIndex: null
+                      });
+                    }}
+                  />
+                ) : (
+                  option.name
+                )}
               </S.TH>
             ))}
-          </tr>
-          <tr>
-            <S.TD>{String.fromCharCode(160)}</S.TD>
-            <S.TD>{String.fromCharCode(160)}</S.TD>
-            {options.map(_ => (
-              <>
-                <S.TD>Оценка</S.TD>
-                <S.TD>Вывод</S.TD>
-              </>
-            ))}
-          </tr>
+            <S.TH
+              isCursor
+              colSpan={2}
+              onClick={() => {
+                setOptions([
+                  ...options,
+                  {
+                    name: 'New Option',
+                    values: new Array(criteria.length).fill(1)
+                  }
+                ]);
+              }}
+            >
+              <S.Add>Add option</S.Add>
+            </S.TH>
+          </S.TR>
         </S.Thead>
+
         <tfoot>
-          <tr>
-            <S.TD>{String.fromCharCode(160)}</S.TD>
-            <S.TD>Total</S.TD>
-            <S.TD>_</S.TD>
-            <S.TD>55</S.TD>
-            <S.TD>_</S.TD>
-            <S.TD>66</S.TD>
-          </tr>
-        </tfoot>
-        <S.Tbody>
-          {criteria.map((item, index) => {
-            const { values } = options[index];
-
-            if (!Array.isArray(values) || values.length === 0) {
-              return null;
-            }
-
-            const { name, weighting } = item;
-
-            return (
-              <tr key={name + weighting}>
-                <S.TH>{name}</S.TH>
-                <S.TH>{weighting}</S.TH>
-                {values.map(value => {
-                  const total = value * weighting;
-
-                  return (
-                    <>
-                      <S.TD>{value}</S.TD>
-                      <S.TD>{total}</S.TD>
-                    </>
-                  );
-                })}
-              </tr>
-            );
-          })}
-          <tr>
-            <S.TD>{String.fromCharCode(160)}</S.TD>
-            <S.TD>{String.fromCharCode(160)}</S.TD>
-            {options.map(_ => (
-              <>
-                <S.TD>{String.fromCharCode(160)}</S.TD>
-                <S.TD>{String.fromCharCode(160)}</S.TD>
-              </>
+          <S.TR>
+            <S.TD
+              isCursor
+              onClick={() => {
+                setCriteria([
+                  ...criteria,
+                  { name: 'New criteria', weighting: 1 }
+                ]);
+              }}
+            >
+              <S.Add>Add criteria</S.Add>
+            </S.TD>
+            <TDEmpty />
+            {options.map((_, index) => (
+              <Fragment key={index}>
+                <TDEmpty />
+                <TDEmpty />
+              </Fragment>
             ))}
-          </tr>
+            <TDEmpty />
+            <TDEmpty />
+          </S.TR>
+          <S.TR>
+            <TDEmpty />
+            <S.TD>TOTAL: </S.TD>
+            {totals.map((value, index) => (
+              <Fragment key={index}>
+                <TDEmpty />
+                <S.TD
+                  isMin={!isCoincidesMinAndMax && value === min}
+                  isMax={!isCoincidesMinAndMax && value === max}
+                >
+                  {value}
+                </S.TD>
+              </Fragment>
+            ))}
+            <TDEmpty />
+            <TDEmpty />
+          </S.TR>
+        </tfoot>
+
+        <S.Tbody>
+          <S.TR>
+            <TDEmpty />
+            <TDEmpty />
+            {options.map((_, index) => (
+              <Fragment key={index}>
+                <S.TH>Score</S.TH>
+                <S.TH>Total</S.TH>
+              </Fragment>
+            ))}
+            <S.TH>
+              <S.Add>Score</S.Add>
+            </S.TH>
+            <S.TH>
+              <S.Add>Total</S.Add>
+            </S.TH>
+          </S.TR>
+          {TRForBody}
         </S.Tbody>
       </S.Table>
+      <S.DataShow onClick={() => setShow(!isShow)}>
+        {isShow ? 'Скрыть данные' : 'Показать данные'}
+      </S.DataShow>
+      {isShow && (
+        <S.Data>
+          <pre>
+            Options:
+            <br />
+            {JSON.stringify(options, undefined, 2)}
+          </pre>
+          <pre>
+            Criteria:
+            <br />
+            {JSON.stringify(criteria, undefined, 2)}
+          </pre>
+          <pre>
+            Totals:
+            <br />
+            {JSON.stringify(totals, undefined, 2)}
+          </pre>
+        </S.Data>
+      )}
     </S.DecisionMatrix>
   );
 }
@@ -94,21 +320,21 @@ function DecisionMatrix(props: T.DecisionMatrixProps) {
 DecisionMatrix.defaultProps = {
   criteria: [
     {
-      name: 'Цена',
+      name: 'First criterion',
       weighting: 5
     },
     {
-      name: 'ДМС',
-      weighting: 3
+      name: 'Second criterion',
+      weighting: 5
     }
   ],
   options: [
     {
-      name: 'Первая опция',
+      name: 'First option',
       values: [1, 2]
     },
     {
-      name: 'Вторая опция',
+      name: 'Second option',
       values: [4, 5]
     }
   ]
@@ -117,86 +343,3 @@ DecisionMatrix.defaultProps = {
 DecisionMatrix.displayName = 'DecisionMatrix';
 
 export default DecisionMatrix;
-
-// criteria
-// weighting
-// options
-
-// const data = [
-//   {
-//     criteria: 'Цена',
-//     weighting: 5
-//   },
-//   {
-//     criteria: 'ДМС',
-//     weighting: 3
-//   }
-// ];
-//
-// const options = [
-//   {
-//     name: 'Первая опция',
-//     values: [1, 2]
-//   },
-//   {
-//     name: 'Вторая опция',
-//     values: [4, 5]
-//   }
-// ];
-//
-// const total: number[][] = [];
-//
-// console.log(
-//   'Критерии | Вес |',
-//   options.map(option => `${option.name}    `).join(' | ')
-// );
-// console.log('-----------------------------------------------');
-//
-// console.log(
-//   `         |     |`,
-//   options.map(_ => 'Оценка : Вывод  ').join(' | ')
-// );
-// console.log('-----------------------------------------------');
-//
-// data.forEach((item, index) => {
-//   const { values } = options[index];
-//
-//   console.log(
-//     `${index === 0 ? item.criteria : item.criteria + ' '}     | ${
-//       item.weighting
-//     }   |`,
-//     values
-//       .map(value => {
-//         const totalScore = value * item.weighting;
-//
-//         if (total[index]) {
-//           total[index].push(totalScore);
-//         } else {
-//           total[index] = [totalScore];
-//         }
-//
-//         return `${value} : ${totalScore}`;
-//       })
-//       .join('           | ')
-//   );
-// });
-//
-// function sum2d(arr) {
-//   let row, col;
-//   const sum = arr[0].slice();
-//   for (row = 1; row < arr.length; row++) {
-//     for (col = 0; col < sum.length; col++) {
-//       sum[col] += arr[row][col];
-//     }
-//   }
-//   return sum;
-// }
-//
-// console.log(
-//   `         |     |`,
-//   sum2d(total).map(item => `  : ${item}`).join('           | ')
-// );
-//
-// console.log(String.fromCharCode(160));
-// console.log(String.fromCharCode(160));
-// console.log(String.fromCharCode(160));
