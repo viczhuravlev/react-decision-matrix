@@ -1,4 +1,10 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, {
+  Fragment,
+  useState,
+  useEffect,
+  FocusEvent,
+  KeyboardEvent
+} from 'react';
 
 import * as T from './DecisionMatrix.types';
 import * as S from './DecisionMatrix.styles';
@@ -52,9 +58,32 @@ function DecisionMatrix(props: T.DecisionMatrixProps) {
             <S.Input
               defaultValue={name}
               autoFocus
-              onBlur={event => {
+              onBlur={(event: FocusEvent<HTMLInputElement>) => {
                 if (event.target.value) {
                   criteria[criteriaIndex].name = event.target.value;
+                } else {
+                  setCriteria(
+                    criteriaIndex > 0
+                      ? [
+                          ...criteria.slice(0, criteriaIndex),
+                          ...criteria.slice(criteriaIndex + 1, criteria.length)
+                        ]
+                      : [...criteria.slice(1, criteria.length)]
+                  );
+                }
+                setClicked({
+                  ...clicked,
+                  criteriaIndex: null,
+                  criteriaType: null
+                });
+              }}
+              onKeyDown={(event: KeyboardEvent<HTMLInputElement>) => {
+                if (event.key !== 'Enter') return;
+
+                const { value } = event.target as HTMLInputElement;
+
+                if (value && value.length) {
+                  criteria[criteriaIndex].name = value;
                 } else {
                   setCriteria(
                     criteriaIndex > 0
@@ -91,9 +120,22 @@ function DecisionMatrix(props: T.DecisionMatrixProps) {
             <S.Input
               defaultValue={String(weighting)}
               autoFocus
-              onBlur={event => {
+              onBlur={(event: FocusEvent<HTMLInputElement>) => {
                 // todo: real-time update
                 criteria[criteriaIndex].weighting = Number(event.target.value);
+                setClicked({
+                  ...clicked,
+                  criteriaIndex: null,
+                  criteriaType: null
+                });
+              }}
+              onKeyDown={(event: KeyboardEvent<HTMLInputElement>) => {
+                if (event.key !== 'Enter') return;
+
+                // todo: real-time update
+                criteria[criteriaIndex].weighting = Number(
+                  (event.target as HTMLInputElement).value
+                );
                 setClicked({
                   ...clicked,
                   criteriaIndex: null,
@@ -131,10 +173,25 @@ function DecisionMatrix(props: T.DecisionMatrixProps) {
                   <S.Input
                     defaultValue={String(value)}
                     autoFocus
-                    onBlur={event => {
+                    onBlur={(event: FocusEvent<HTMLInputElement>) => {
                       // todo: real-time update
                       // eslint-disable-next-line no-param-reassign
                       option.values[criteriaIndex] = Number(event.target.value);
+                      setClicked({
+                        optionIndex: null,
+                        criteriaIndex: null,
+                        criteriaType: null
+                      });
+                    }}
+                    onKeyDown={(event: KeyboardEvent<HTMLInputElement>) => {
+                      if (event.key !== 'Enter') return;
+
+                      // todo: real-time update
+                      // eslint-disable-next-line no-param-reassign
+                      option.values[criteriaIndex] = Number(
+                        (event.target as HTMLInputElement).value
+                      );
+
                       setClicked({
                         optionIndex: null,
                         criteriaIndex: null,
@@ -184,9 +241,34 @@ function DecisionMatrix(props: T.DecisionMatrixProps) {
                   <S.Input
                     defaultValue={option.name}
                     autoFocus
-                    onBlur={event => {
+                    onBlur={(event: FocusEvent<HTMLInputElement>) => {
                       if (event.target.value.length) {
                         options[optionIndex].name = event.target.value;
+                      } else {
+                        setOptions(
+                          optionIndex > 0
+                            ? [
+                                ...options.slice(0, optionIndex),
+                                ...options.slice(
+                                  optionIndex + 1,
+                                  options.length
+                                )
+                              ]
+                            : [...options.slice(1, options.length)]
+                        );
+                      }
+                      setClicked({
+                        ...clicked,
+                        optionIndex: null
+                      });
+                    }}
+                    onKeyDown={(event: KeyboardEvent<HTMLInputElement>) => {
+                      if (event.key !== 'Enter') return;
+
+                      const { value } = event.target as HTMLInputElement;
+
+                      if (value && value.length) {
+                        options[optionIndex].name = value;
                       } else {
                         setOptions(
                           optionIndex > 0
