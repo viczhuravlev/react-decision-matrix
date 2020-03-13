@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import * as T from './DecisionMatrix.types';
 declare function DecisionMatrix(
   props: T.DecisionMatrixProps

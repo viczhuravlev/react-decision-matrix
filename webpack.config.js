@@ -22,8 +22,8 @@ module.exports = {
         test: /\.(ts|js)x?$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
-      },
-      { enforce: 'pre', test: /\.(ts|js)x?$/, loader: 'source-map-loader' }
+      }
+      // { enforce: 'pre', test: /\.(ts|js)x?$/, loader: 'source-map-loader' }
     ]
   }
 };

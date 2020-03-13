@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import * as T from './Button.types';
 declare function Button(props: T.ButtonProps): JSX.Element;
 declare namespace Button {
