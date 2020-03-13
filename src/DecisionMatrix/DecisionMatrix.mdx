@@ -1,0 +1,103 @@
+---
+name: Decision Matrix
+---
+
+import { Playground, Props } from 'docz';
+import DecisionMatrix from './';
+
+# Decision Matrix
+
+Info about Decision Matrix
+
+## Properties
+
+<Props of={DecisionMatrix} />
+
+## Basic usage
+
+<Playground>
+  <DecisionMatrix />
+</Playground>
+
+## Work
+
+<Playground>
+  <DecisionMatrix
+    criteria={[
+      {
+        name: 'Зарплата',
+        weighting: 5
+      },
+      {
+        name: 'Проект',
+        weighting: 5
+      },
+      {
+        name: 'Команда',
+        weighting: 4
+      },
+      {
+        name: 'Премии',
+        weighting: 3
+      },
+      {
+        name: 'Конференции',
+        weighting: 2
+      },
+      {
+        name: 'Английский',
+        weighting: 3
+      },
+      {
+        name: 'ДМС',
+        weighting: 2
+      },
+      {
+        name: 'Дорога',
+        weighting: 1
+      },
+      {
+        name: 'Маленькое кол-во встреч',
+        weighting: 2
+      },
+      {
+        name: 'Поработать из дома',
+        weighting: 3
+      },
+      {
+        name: 'Где можно "осесть""',
+        weighting: 1
+      },
+      {
+        name: 'Изменить квалификацию',
+        weighting: 2
+      },
+      {
+        name: 'Корпоративы',
+        weighting: 2
+      },
+      {
+        name: 'Обучение',
+        weighting: 2
+      },
+      {
+        name: 'Офис',
+        weighting: 3
+      },
+      {
+        name: 'Оборудование',
+        weighting: 4
+      }
+    ]}
+    options={[
+      {
+        name: 'Work #1',
+        values: []
+      },
+      {
+        name: 'Work #1',
+        values: []
+      }
+    ]}
+  />
+</Playground>

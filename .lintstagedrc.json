@@ -1,0 +1,10 @@
+{
+  "*.{ts,tsx}": [
+    "prettier --write",
+    "git add",
+    "eslint",
+    "stylelint",
+    "type-coverage --at-least 100"
+  ],
+  "*.mdx": ["prettier --write", "git add"]
+}
